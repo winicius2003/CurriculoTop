@@ -3,1584 +3,926 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Currículo.AI Turbo 2.0 - Crie currículos profissionais em minutos</title>
+  <title>Currículo.AI Turbo 3.5 - Crie currículos profissionais</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://alcdn.msauth.net/browser/2.24.0/js/msal-browser.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary-color: #4361ee;
-      --secondary-color: #3f37c9;
-      --accent-color: #4895ef;
-      --light-color: #f8f9fa;
-      --dark-color: #212529;
-      --success-color: #4bb543;
-      --warning-color: #f0ad4e;
-      --danger-color: #d9534f;
-    }
-    
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f5f7ff;
-      color: var(--dark-color);
-      line-height: 1.6;
-      padding: 0;
-      margin: 0;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    
-    header {
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      color: white;
-      padding: 2rem 0;
-      text-align: center;
-      border-radius: 0 0 20px 20px;
-      box-shadow: 0 4px 20px rgba(67, 97, 238, 0.3);
-      margin-bottom: 2rem;
-    }
-    
-    header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    header p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-    
-    .premium-badge {
-      background-color: var(--warning-color);
-      color: white;
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      display: inline-block;
-      margin-left: 0.5rem;
-      vertical-align: middle;
-    }
-    
-    .steps {
-      display: flex;
-      justify-content: center;
-      margin: 2rem 0;
-      gap: 1rem;
-    }
-    
-    .step {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      opacity: 0.6;
-      transition: all 0.3s ease;
-    }
-    
-    .step.active {
-      opacity: 1;
-      font-weight: 500;
-    }
-    
-    .step-number {
-      background-color: var(--primary-color);
-      color: white;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-    }
-    
-    .step.active .step-number {
-      background-color: var(--accent-color);
-    }
-    
-    .form-container {
-      background-color: white;
-      border-radius: 15px;
-      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
-      padding: 2rem;
-      margin-bottom: 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .form-section {
-      display: none;
-    }
-    
-    .form-section.active {
-      display: block;
-      animation: fadeIn 0.5s ease;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .section-title {
-      color: var(--primary-color);
-      margin-bottom: 1.5rem;
-      font-size: 1.4rem;
-      position: relative;
-      padding-bottom: 0.5rem;
-    }
-    
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 50px;
-      height: 3px;
-      background-color: var(--accent-color);
-      border-radius: 3px;
-    }
-    
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-    
-    .col {
-      flex: 1;
-      min-width: 250px;
-    }
-    
-    .form-group {
-      margin-bottom: 1.2rem;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: var(--dark-color);
-    }
-    
-    .required::after {
-      content: ' *';
-      color: var(--danger-color);
-    }
-    
-    input, textarea, select {
-      width: 100%;
-      padding: 0.8rem 1rem;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-    }
-    
-    input:focus, textarea:focus, select:focus {
-      outline: none;
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
-    }
-    
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-    
-    select[multiple] {
-      height: auto;
-      min-height: 100px;
-      padding: 0.5rem;
-    }
-    
-    .form-actions {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 2rem;
-    }
-    
-    .btn {
-      padding: 0.8rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: none;
-      font-size: 1rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-    
-    .btn-primary {
-      background-color: var(--primary-color);
-      color: white;
-    }
-    
-    .btn-primary:hover {
-      background-color: var(--secondary-color);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
-    }
-    
-    .btn-secondary {
-      background-color: #e9ecef;
-      color: var(--dark-color);
-    }
-    
-    .btn-secondary:hover {
-      background-color: #dee2e6;
-    }
-    
-    .btn-outline {
-      background-color: transparent;
-      border: 1px solid var(--primary-color);
-      color: var(--primary-color);
-    }
-    
-    .btn-outline:hover {
-      background-color: rgba(67, 97, 238, 0.1);
-    }
-    
-    .btn-icon {
-      font-size: 1.2rem;
-    }
-    
-    .preview-container {
-      background-color: white;
-      border-radius: 15px;
-      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
-      padding: 2rem;
-      margin-bottom: 2rem;
-      display: none;
-    }
-    
-    .preview-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-    
-    .preview-title {
-      color: var(--primary-color);
-      font-size: 1.5rem;
-    }
-    
-    .preview-actions {
-      display: flex;
-      gap: 1rem;
-    }
-    
-    .curriculo {
-      font-family: 'Poppins', sans-serif;
-      color: #333;
-      line-height: 1.6;
-      position: relative;
-      padding: 2rem;
-      background-color: white;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
-    
-    .curriculo-header {
-      text-align: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 2px solid var(--primary-color);
-    }
-    
-    .curriculo-name {
-      font-size: 2.2rem;
-      color: var(--primary-color);
-      margin-bottom: 0.5rem;
-      font-weight: 700;
-    }
-    
-    .curriculo-title {
-      font-size: 1.2rem;
-      color: #555;
-      font-weight: 400;
-    }
-    
-    .curriculo-contact {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    
-    .contact-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.9rem;
-    }
-    
-    .contact-icon {
-      color: var(--primary-color);
-    }
-    
-    .curriculo-section {
-      margin-bottom: 1.5rem;
-    }
-    
-    .section-title-curriculo {
-      color: var(--primary-color);
-      font-size: 1.3rem;
-      margin-bottom: 0.8rem;
-      padding-bottom: 0.3rem;
-      border-bottom: 1px solid #eee;
-      font-weight: 600;
-    }
-    
-    .section-content {
-      padding-left: 1rem;
-    }
-    
-    .experience-item, .education-item {
-      margin-bottom: 1.2rem;
-    }
-    
-    .experience-header, .education-header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.3rem;
-    }
-    
-    .experience-title, .education-title {
-      font-weight: 600;
-      color: #444;
-    }
-    
-    .experience-date, .education-date {
-      color: #666;
-      font-size: 0.9rem;
-    }
-    
-    .experience-company, .education-institution {
-      font-style: italic;
-      color: #666;
-      margin-bottom: 0.3rem;
-    }
-    
-    .experience-description, .education-description {
-      color: #555;
-      font-size: 0.95rem;
-    }
-    
-    .skills-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-    }
-    
-    .skill-tag {
-      background-color: var(--primary-color);
-      color: white;
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
-    }
-    
-    .watermark {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(-30deg);
-      font-size: 80px;
-      color: rgba(67, 97, 238, 0.1);
-      z-index: 0;
-      pointer-events: none;
-      font-weight: 700;
-    }
-    
-    .premium-features {
-      background: linear-gradient(135deg, #f5f7ff, #e6ebff);
-      border-radius: 15px;
-      padding: 1.5rem;
-      margin: 2rem 0;
-      border: 1px dashed var(--primary-color);
-    }
-    
-    .premium-title {
-      color: var(--primary-color);
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1rem;
-    }
-    
-    .feature-card {
-      background-color: white;
-      padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-      border-left: 4px solid var(--accent-color);
-    }
-    
-    .feature-icon {
-      color: var(--accent-color);
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    .feature-title {
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-    }
-    
-    .feature-desc {
-      font-size: 0.9rem;
-      color: #666;
-    }
-    
-    .upgrade-btn {
-      display: inline-block;
-      margin-top: 1rem;
-      background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
-      color: white;
-      padding: 0.8rem 1.5rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.3s ease;
-    }
-    
-    .upgrade-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-    }
-    
-    .template-selector {
-      margin: 1.5rem 0;
-    }
-    
-    .templates-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    
-    .template-card {
-      border: 2px solid #ddd;
-      border-radius: 10px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .template-card:hover {
-      border-color: var(--accent-color);
-      transform: translateY(-5px);
-    }
-    
-    .template-card.selected {
-      border-color: var(--primary-color);
-      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.2);
-    }
-    
-    .template-preview {
-      height: 150px;
-      background-color: #f5f7ff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--primary-color);
-      font-size: 1.5rem;
-    }
-    
-    .template-name {
-      padding: 0.8rem;
-      text-align: center;
-      font-weight: 500;
-      background-color: white;
-    }
-    
-    .ai-suggestions {
-      background-color: #f8f9fa;
-      border-radius: 10px;
-      padding: 1rem;
-      margin-top: 1rem;
-      border-left: 4px solid var(--accent-color);
-    }
-    
-    .ai-title {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--primary-color);
-      margin-bottom: 0.5rem;
-    }
-    
-    .ai-content {
-      font-size: 0.95rem;
-      color: #555;
-    }
-    
-    .ai-action {
-      margin-top: 0.5rem;
-      display: flex;
-      gap: 0.5rem;
-    }
-    
-    .ai-btn {
-      padding: 0.3rem 0.8rem;
-      font-size: 0.8rem;
-      border-radius: 5px;
-      background-color: var(--accent-color);
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    
-    .progress-container {
-      width: 100%;
-      background-color: #e9ecef;
-      border-radius: 10px;
-      margin: 1.5rem 0;
-      height: 10px;
-    }
-    
-    .progress-bar {
-      height: 100%;
-      border-radius: 10px;
-      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-      width: 0%;
-      transition: width 0.5s ease;
-    }
-    
-    .progress-text {
-      text-align: center;
-      font-size: 0.9rem;
-      color: #666;
-      margin-top: 0.5rem;
-    }
-    
-    .floating-cta {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      color: white;
-      padding: 1rem 1.5rem;
-      border-radius: 50px;
-      box-shadow: 0 10px 25px rgba(67, 97, 238, 0.3);
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      z-index: 100;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .floating-cta:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(67, 97, 238, 0.4);
-    }
-    
-    .cta-icon {
-      font-size: 1.5rem;
-    }
-    
-    .cta-text {
-      font-weight: 500;
-    }
-    
-    .cta-price {
-      background-color: white;
-      color: var(--primary-color);
-      padding: 0.2rem 0.8rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-    
-    @media (max-width: 768px) {
-      header h1 {
-        font-size: 2rem;
-      }
-      
-      .row {
-        flex-direction: column;
-        gap: 1rem;
-      }
-      
-      .steps {
-        flex-wrap: wrap;
-      }
-      
-      .floating-cta {
-        bottom: 1rem;
-        right: 1rem;
-        padding: 0.8rem 1.2rem;
-      }
-      
-      .cta-text {
-        display: none;
-      }
-    }
-    
-    /* Template specific styles */
-    .template-modern {
-      --primary-color: #4361ee;
-      --secondary-color: #3f37c9;
-      --accent-color: #4895ef;
-    }
-    
-    .template-classic {
-      --primary-color: #2b2d42;
-      --secondary-color: #1a1a2e;
-      --accent-color: #4a4e69;
-    }
-    
-    .template-creative {
-      --primary-color: #f72585;
-      --secondary-color: #b5179e;
-      --accent-color: #7209b7;
-    }
-    
-    .template-professional {
-      --primary-color: #0077b6;
-      --secondary-color: #023e8a;
-      --accent-color: #0096c7;
-    }
-    
-    .template-minimalist {
-      --primary-color: #333;
-      --secondary-color: #222;
-      --accent-color: #555;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <div class="container">
-      <h1>Currículo.AI Turbo 2.0 <span class="premium-badge">PREMIUM</span></h1>
-      <p>Crie currículos profissionais em minutos com nossa inteligência artificial. Impressione recrutadores e aumente suas chances de ser contratado!</p>
-    </div>
-  </header>
-  
-  <div class="container">
-    <div class="steps">
-      <div class="step active" id="step1">
-        <div class="step-number">1</div>
-        <div class="step-text">Informações Básicas</div>
-      </div>
-      <div class="step" id="step2">
-        <div class="step-number">2</div>
-        <div class="step-text">Experiência</div>
-      </div>
-      <div class="step" id="step3">
-        <div class="step-number">3</div>
-        <div class="step-text">Habilidades</div>
-      </div>
-      <div class="step" id="step4">
-        <div class="step-number">4</div>
-        <div class="step-text">Finalizar</div>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <i class="fas fa-file-alt"></i>
+        <span>CurrículoTop</span>
       </div>
     </div>
     
-    <div class="progress-container">
-      <div class="progress-bar" id="progressBar"></div>
-      <div class="progress-text" id="progressText">0% completo</div>
-    </div>
+    <ul class="sidebar-menu">
+      <li class="menu-item">
+        <a href="#" class="menu-link active" onclick="showSection('dashboard')">
+          <i class="fas fa-home"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="#create-resume" class="menu-link" id="abrir-formulario-curriculo">
+          <i class="fas fa-plus-circle"></i>
+          <span>Criar Currículo</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="#" class="menu-link" onclick="showSection('my-resumes')">
+          <i class="fas fa-file-alt"></i>
+          <span>Meus Currículos</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="#" class="menu-link" onclick="showSection('ats-analysis')">
+          <i class="fas fa-search"></i>
+          <span>Análise ATS</span>
+          <span class="menu-badge">PREMIUM</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="#" class="menu-link" onclick="showSection('interview-prep')">
+          <i class="fas fa-comments"></i>
+          <span>Preparação Entrevista</span>
+          <span class="menu-badge">PREMIUM</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="#" class="menu-link" onclick="showSection('job-search')">
+          <i class="fas fa-briefcase"></i>
+          <span>Busca de Vagas</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="#" class="menu-link" onclick="showSection('career-advice')">
+          <i class="fas fa-lightbulb"></i>
+          <span>Conselhos de Carreira</span>
+        </a>
+      </li>
+    </ul>
     
-    <form id="formulario">
-      <!-- Seção 1: Informações Básicas -->
-      <div class="form-container">
-        <div class="form-section active" id="section1">
-          <h2 class="section-title">Informações Pessoais</h2>
-          
-          <div class="row">
-            <div class="col">
-              <div class="form-group">
-                <label for="nome" class="required">Nome completo</label>
-                <input type="text" id="nome" placeholder="Ex: João da Silva" required>
-              </div>
-            </div>
-            <div class="col">
-              <div class="form-group">
-                <label for="profissao" class="required">Profissão/Cargo</label>
-                <input type="text" id="profissao" placeholder="Ex: Desenvolvedor Front-end" required>
-              </div>
-            </div>
-          </div>
-          
-          <div class="row">
-            <div class="col">
-              <div class="form-group">
-                <label for="email" class="required">E-mail</label>
-                <input type="email" id="email" placeholder="seu@email.com" required>
-              </div>
-            </div>
-            <div class="col">
-              <div class="form-group">
-                <label for="telefone" class="required">Telefone</label>
-                <input type="tel" id="telefone" placeholder="(00) 00000-0000" required>
-              </div>
-            </div>
-          </div>
-          
-          <div class="row">
-            <div class="col">
-              <div class="form-group">
-                <label for="cidade">Cidade/Estado</label>
-                <input type="text" id="cidade" placeholder="Ex: São Paulo, SP">
-              </div>
-            </div>
-            <div class="col">
-              <div class="form-group">
-                <label for="linkedin">LinkedIn (opcional)</label>
-                <input type="url" id="linkedin" placeholder="https://linkedin.com/in/seu-perfil">
-              </div>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="sobre">Sobre você (resumo profissional)</label>
-            <textarea id="sobre" placeholder="Descreva brevemente sua experiência e objetivos profissionais (2-3 frases)"></textarea>
-            <div class="ai-suggestions">
-              <div class="ai-title">
-                <i class="fas fa-robot"></i>
-                <span>Sugestão da IA</span>
-              </div>
-              <div class="ai-content" id="sugestao-sobre">
-                Desenvolvedor front-end com 5 anos de experiência em criação de interfaces responsivas e acessíveis. Apaixonado por UX/UI e sempre buscando aprender novas tecnologias para criar experiências digitais excepcionais.
-              </div>
-              <div class="ai-action">
-                <button class="ai-btn" onclick="usarSugestao('sobre')"><i class="fas fa-magic"></i> Usar sugestão</button>
-                <button class="ai-btn" onclick="gerarSugestao('sobre')"><i class="fas fa-sync-alt"></i> Gerar outra</button>
-              </div>
-            </div>
-          </div>
-          
-          <div class="form-actions">
-            <button type="button" class="btn btn-secondary" disabled>
-              <i class="fas fa-arrow-left btn-icon"></i> Anterior
-            </button>
-            <button type="button" class="btn btn-primary" onclick="proximaSecao(1, 2)">
-              Próximo <i class="fas fa-arrow-right btn-icon"></i>
-            </button>
-          </div>
-        </div>
-        
-        <!-- Seção 2: Experiência Profissional -->
-        <div class="form-section" id="section2">
-          <h2 class="section-title">Experiência Profissional</h2>
-          
-          <div id="experiencias-container">
-            <div class="experiencia-item">
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <label for="cargo1">Cargo</label>
-                    <input type="text" id="cargo1" placeholder="Ex: Desenvolvedor Front-end">
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <label for="empresa1">Empresa</label>
-                    <input type="text" id="empresa1" placeholder="Ex: Google">
-                  </div>
-                </div>
-              </div>
-              
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <label for="inicio1">Data de início</label>
-                    <input type="month" id="inicio1">
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <label for="fim1">Data de término</label>
-                    <input type="month" id="fim1">
-                  </div>
-                </div>
-              </div>
-              
-              <div class="form-group">
-                <label for="descricao1">Descrição das atividades</label>
-                <textarea id="descricao1" placeholder="Descreva suas responsabilidades e conquistas neste cargo"></textarea>
-              </div>
-            </div>
-          </div>
-          
-          <button type="button" class="btn btn-outline" onclick="adicionarExperiencia()">
-            <i class="fas fa-plus btn-icon"></i> Adicionar outra experiência
-          </button>
-          
-          <h2 class="section-title" style="margin-top: 2rem;">Formação Acadêmica</h2>
-          
-          <div id="formacoes-container">
-            <div class="formacao-item">
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <label for="curso1">Curso</label>
-                    <input type="text" id="curso1" placeholder="Ex: Análise e Desenvolvimento de Sistemas">
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <label for="instituicao1">Instituição</label>
-                    <input type="text" id="instituicao1" placeholder="Ex: Universidade de São Paulo">
-                  </div>
-                </div>
-              </div>
-              
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <label for="inicio-curso1">Ano de início</label>
-                    <input type="number" id="inicio-curso1" min="1900" max="2099" step="1" placeholder="Ex: 2018">
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <label for="fim-curso1">Ano de conclusão</label>
-                    <input type="number" id="fim-curso1" min="1900" max="2099" step="1" placeholder="Ex: 2021">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <button type="button" class="btn btn-outline" onclick="adicionarFormacao()">
-            <i class="fas fa-plus btn-icon"></i> Adicionar outra formação
-          </button>
-          
-          <div class="form-actions">
-            <button type="button" class="btn btn-secondary" onclick="proximaSecao(2, 1)">
-              <i class="fas fa-arrow-left btn-icon"></i> Anterior
-            </button>
-            <button type="button" class="btn btn-primary" onclick="proximaSecao(2, 3)">
-              Próximo <i class="fas fa-arrow-right btn-icon"></i>
-            </button>
-          </div>
-        </div>
-        
-        <!-- Seção 3: Habilidades -->
-        <div class="form-section" id="section3">
-          <h2 class="section-title">Habilidades Técnicas</h2>
-          
-          <div class="form-group">
-            <label for="habilidades">Lista de habilidades (separadas por vírgula)</label>
-            <textarea id="habilidades" placeholder="Ex: HTML, CSS, JavaScript, React, Git"></textarea>
-          </div>
-          
-          <div class="form-group">
-            <label>Nível de proficiência</label>
-            <div style="margin-top: 1rem;">
-              <canvas id="skillsChart" height="150"></canvas>
-            </div>
-          </div>
-          
-          <h2 class="section-title" style="margin-top: 2rem;">Idiomas</h2>
-          
-          <div id="idiomas-container">
-            <div class="row">
-              <div class="col">
-                <div class="form-group">
-                  <label for="idioma1">Idioma</label>
-                  <input type="text" id="idioma1" placeholder="Ex: Inglês">
-                </div>
-              </div>
-              <div class="col">
-                <div class="form-group">
-                  <label for="nivel1">Nível</label>
-                  <select id="nivel1">
-                    <option value="Básico">Básico</option>
-                    <option value="Intermediário">Intermediário</option>
-                    <option value="Avançado">Avançado</option>
-                    <option value="Fluente">Fluente</option>
-                    <option value="Nativo">Nativo</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <button type="button" class="btn btn-outline" onclick="adicionarIdioma()">
-            <i class="fas fa-plus btn-icon"></i> Adicionar outro idioma
-          </button>
-          
-          <h2 class="section-title" style="margin-top: 2rem;">Cursos e Certificações</h2>
-          
-          <div class="form-group">
-            <label for="cursos">Lista de cursos e certificações</label>
-            <textarea id="cursos" placeholder="Ex: Curso de UX Design - Alura (2022), Certificação AWS - Amazon (2023)"></textarea>
-          </div>
-          
-          <div class="form-actions">
-            <button type="button" class="btn btn-secondary" onclick="proximaSecao(3, 2)">
-              <i class="fas fa-arrow-left btn-icon"></i> Anterior
-            </button>
-            <button type="button" class="btn btn-primary" onclick="proximaSecao(3, 4)">
-              Próximo <i class="fas fa-arrow-right btn-icon"></i>
-            </button>
-          </div>
-        </div>
-        
-        <!-- Seção 4: Finalizar -->
-        <div class="form-section" id="section4">
-          <h2 class="section-title">Escolha o Modelo do Seu Currículo</h2>
-          
-          <div class="template-selector">
-            <div class="templates-grid">
-              <div class="template-card template-modern" onclick="selecionarTemplate('modern')">
-                <div class="template-preview">
-                  <i class="fas fa-paint-brush"></i>
-                </div>
-                <div class="template-name">Moderno</div>
-              </div>
-              <div class="template-card template-classic" onclick="selecionarTemplate('classic')">
-                <div class="template-preview">
-                  <i class="fas fa-briefcase"></i>
-                </div>
-                <div class="template-name">Clássico</div>
-              </div>
-              <div class="template-card template-creative" onclick="selecionarTemplate('creative')">
-                <div class="template-preview">
-                  <i class="fas fa-lightbulb"></i>
-                </div>
-                <div class="template-name">Criativo</div>
-              </div>
-              <div class="template-card template-professional" onclick="selecionarTemplate('professional')">
-                <div class="template-preview">
-                  <i class="fas fa-user-tie"></i>
-                </div>
-                <div class="template-name">Profissional</div>
-              </div>
-              <div class="template-card template-minimalist" onclick="selecionarTemplate('minimalist')">
-                <div class="template-preview">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <div class="template-name">Minimalista</div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="premium-features">
-            <h3 class="premium-title">
-              <i class="fas fa-crown"></i>
-              <span>Recursos Premium</span>
-            </h3>
-            <div class="features-grid">
-              <div class="feature-card">
-                <div class="feature-icon">
-                  <i class="fas fa-file-pdf"></i>
-                </div>
-                <div class="feature-title">Download sem marca d'água</div>
-                <div class="feature-desc">Baixe seu currículo em PDF sem a marca d'água do Currículo.AI</div>
-              </div>
-              <div class="feature-card">
-                <div class="feature-icon">
-                  <i class="fas fa-palette"></i>
-                </div>
-                <div class="feature-title">Mais modelos</div>
-                <div class="feature-desc">Acesso a 15 modelos profissionais exclusivos</div>
-              </div>
-              <div class="feature-card">
-                <div class="feature-icon">
-                  <i class="fas fa-robot"></i>
-                </div>
-                <div class="feature-title">Otimização por IA</div>
-                <div class="feature-desc">Nossa IA analisa e sugere melhorias no seu currículo</div>
-              </div>
-              <div class="feature-card">
-                <div class="feature-icon">
-                  <i class="fas fa-cloud-upload-alt"></i>
-                </div>
-                <div class="feature-title">Armazenamento na nuvem</div>
-                <div class="feature-desc">Salve até 10 currículos diferentes na nuvem</div>
-              </div>
-            </div>
-            <a href="#" class="upgrade-btn" id="upgradeBtn">
-              <i class="fas fa-crown"></i> Assinar Premium por R$19,90/mês
-            </a>
-          </div>
-          
-          <div class="form-actions">
-            <button type="button" class="btn btn-secondary" onclick="proximaSecao(4, 3)">
-              <i class="fas fa-arrow-left btn-icon"></i> Anterior
-            </button>
-            <button type="button" class="btn btn-primary" onclick="gerarCurriculo()">
-              <i class="fas fa-file-pdf btn-icon"></i> Gerar Currículo
-            </button>
-          </div>
+    <div class="sidebar-footer">
+      <div class="user-profile" id="userProfile">
+        <img src="https://via.placeholder.com/150" alt="User" class="user-avatar" id="userAvatar" onclick="showUploadModal()">
+        <div>
+          <div class="user-name" id="userName">Visitante</div>
+          <div class="user-email" id="userEmail">Faça login para salvar</div>
         </div>
       </div>
-    </form>
-    
-    <div class="preview-container" id="previewContainer">
-      <div class="preview-header">
-        <h2 class="preview-title">Prévia do seu currículo</h2>
-        <div class="preview-actions">
-          <button class="btn btn-secondary" onclick="editarCurriculo()">
-            <i class="fas fa-edit btn-icon"></i> Editar
-          </button>
-          <button class="btn btn-primary" onclick="baixarPDF()">
-            <i class="fas fa-download btn-icon"></i> Baixar PDF
-          </button>
-        </div>
-      </div>
-      
-      <div id="curriculo" class="curriculo">
-        <div class="watermark">Currículo.AI</div>
-        <!-- O conteúdo do currículo será gerado aqui -->
+      <button class="logout-btn" id="logoutBtn" style="display: none;">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Sair</span>
+      </button>
+      <div id="loginBtnContainer">
+        <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="showLoginModal()">
+          <i class="fab fa-google"></i> Entrar
+        </button>
       </div>
     </div>
   </div>
   
+  <!-- Modal de Upload de Foto -->
+  <div class="modal" id="uploadModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Alterar Foto de Perfil</h3>
+        <button class="close-modal" onclick="closeUploadModal()">&times;</button>
+      </div>
+      
+      <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+        <div class="upload-icon">
+          <i class="fas fa-cloud-upload-alt"></i>
+        </div>
+        <p>Arraste e solte sua foto aqui ou clique para selecionar</p>
+        <p class="text-muted">Formatos suportados: JPG, PNG (Max. 2MB)</p>
+        <img id="previewImage" class="preview-image" alt="Preview">
+      </div>
+      
+      <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="previewFile()">
+      
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeUploadModal()">Cancelar</button>
+        <button class="btn btn-primary" id="uploadBtn" onclick="uploadPhoto()" disabled>Salvar Foto</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="main-content" id="mainContent">
+    <!-- Login Container (mostrado inicialmente) -->
+    <div class="login-container" id="loginContainer">
+      <div class="login-box">
+        <h1 class="login-title">Bem-vindo ao Currículo.AI Turbo 3.5</h1>
+        <p class="login-subtitle">Crie, otimize e gerencie seus currículos com inteligência artificial</p>
+        
+        <div class="social-login">
+          <button class="social-btn google" id="googleLoginBtn">
+            <i class="fab fa-google"></i>
+            <span>Continuar com Google</span>
+          </button>
+          <button class="social-btn microsoft" id="microsoftLoginBtn">
+            <i class="fab fa-microsoft"></i>
+            <span>Continuar com Microsoft</span>
+          </button>
+          <button class="social-btn apple" id="appleLoginBtn">
+            <i class="fab fa-apple"></i>
+            <span>Continuar com Apple</span>
+          </button>
+        </div>
+        
+        <div class="divider">
+          <span class="divider-text">OU</span>
+        </div>
+        
+        <button class="btn btn-outline" style="width: 100%;" onclick="continueAsGuest()">
+          <i class="fas fa-user"></i> Continuar como visitante
+        </button>
+        
+        <p style="margin-top: 1.5rem; font-size: 0.9rem; color: #666;">
+          Ao continuar, você concorda com nossos <a href="#" style="color: var(--primary-color);">Termos de Serviço</a> e <a href="#" style="color: var(--primary-color);">Política de Privacidade</a>.
+        </p>
+      </div>
+    </div>
+    
+    <!-- Conteúdo após login (inicialmente oculto) -->
+    <div id="appContent" style="display: none;">
+      <!-- Dashboard Section -->
+      <div class="container" id="dashboardSection">
+        <header>
+          <h1>Dashboard</h1>
+          <p>Visualize suas estatísticas e acesse rapidamente seus recursos</p>
+        </header>
+        
+        <div class="dashboard-cards">
+          <div class="dashboard-card">
+            <div class="card-header">
+              <div class="card-icon blue">
+                <i class="fas fa-file-alt"></i>
+              </div>
+              <div>
+                <div class="card-title">Currículos Criados</div>
+                <div class="card-value" id="resumesCount">0</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <i class="fas fa-arrow-up" style="color: var(--success-color);"></i> Comece a criar seu primeiro currículo
+            </div>
+          </div>
+          
+          <div class="dashboard-card">
+            <div class="card-header">
+              <div class="card-icon green">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div>
+                <div class="card-title">Taxa de Sucesso</div>
+                <div class="card-value" id="successRate">0%</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <i class="fas fa-info-circle" style="color: var(--accent-color);"></i> Complete seu perfil para melhorar
+            </div>
+          </div>
+          
+          <div class="dashboard-card">
+            <div class="card-header">
+              <div class="card-icon orange">
+                <i class="fas fa-bullseye"></i>
+              </div>
+              <div>
+                <div class="card-title">Vagas Aplicadas</div>
+                <div class="card-value" id="jobsApplied">0</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <i class="fas fa-info-circle" style="color: var(--accent-color);"></i> Conecte-se a plataformas de emprego
+            </div>
+          </div>
+          
+          <div class="dashboard-card">
+            <div class="card-header">
+              <div class="card-icon red">
+                <i class="fas fa-star"></i>
+              </div>
+              <div>
+                <div class="card-title">Status Premium</div>
+                <div class="card-value" id="premiumStatus">Inativo</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <a href="#" onclick="scrollToUpgrade()" style="color: var(--primary-color);">Ativar Premium</a> para mais recursos
+            </div>
+          </div>
+        </div>
+        
+        <div class="resumes-list">
+          <h2 style="margin-bottom: 1rem; color: var(--primary-color);">Seus Currículos Recentes</h2>
+          
+          <div id="resumesListContainer">
+            <p style="text-align: center; color: #666; margin: 2rem 0;">Você ainda não criou nenhum currículo. Comece agora!</p>
+          </div>
+        </div>
+        
+        <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="showSection('create-resume')">
+          <i class="fas fa-plus"></i> Criar Novo Currículo
+        </button>
+      </div>
+      
+      <!-- Create Resume Section -->
+      <div class="container" id="createResumeSection" style="display: none;">
+        <header>
+          <h1>Criar Novo Currículo</h1>
+          <p>Preencha as informações abaixo para criar um currículo profissional</p>
+        </header>
+        
+        <div class="steps">
+          <div class="step active" id="step1">
+            <div class="step-number">1</div>
+            <div class="step-text">Informações Básicas</div>
+          </div>
+          <div class="step" id="step2">
+            <div class="step-number">2</div>
+            <div class="step-text">Experiência</div>
+          </div>
+          <div class="step" id="step3">
+            <div class="step-number">3</div>
+            <div class="step-text">Habilidades</div>
+          </div>
+          <div class="step" id="step4">
+            <div class="step-number">4</div>
+            <div class="step-text">Finalizar</div>
+          </div>
+        </div>
+        
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar"></div>
+          <div class="progress-text" id="progressText">0% completo</div>
+        </div>
+        
+        <form id="formulario">
+          <!-- Seção 1: Informações Básicas -->
+          <div class="form-container">
+            <div class="form-section active" id="section1">
+              <h2 class="section-title">Informações Pessoais</h2>
+              
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="nome" class="required">Nome completo</label>
+                    <input type="text" id="nome" placeholder="Ex: João da Silva" required>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <label for="profissao" class="required">Profissão/Cargo</label>
+                    <input type="text" id="profissao" placeholder="Ex: Desenvolvedor Front-end" required>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="email" class="required">E-mail</label>
+                    <input type="email" id="email" placeholder="seu@email.com" required>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <label for="telefone" class="required">Telefone</label>
+                    <input type="tel" id="telefone" placeholder="(00) 00000-0000" required>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="cidade">Cidade/Estado</label>
+                    <input type="text" id="cidade" placeholder="Ex: São Paulo, SP">
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <label for="linkedin">LinkedIn (opcional)</label>
+                    <input type="url" id="linkedin" placeholder="https://linkedin.com/in/seu-perfil">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="sobre">Sobre você (resumo profissional)</label>
+                <textarea id="sobre" placeholder="Descreva brevemente sua experiência e objetivos profissionais (2-3 frases)"></textarea>
+                <div class="ai-suggestions">
+                  <div class="ai-title">
+                    <i class="fas fa-robot"></i>
+                    <span>Sugestão da IA</span>
+                  </div>
+                  <div class="ai-content" id="sugestao-sobre">
+                    Desenvolvedor front-end com 5 anos de experiência em criação de interfaces responsivas e acessíveis. Apaixonado por UX/UI e sempre buscando aprender novas tecnologias para criar experiências digitais excepcionais.
+                  </div>
+                  <div class="ai-action">
+                    <button type="button" class="ai-btn" onclick="usarSugestao('sobre')"><i class="fas fa-magic"></i> Usar sugestão</button>
+                    <button type="button" class="ai-btn" onclick="gerarSugestao('sobre')"><i class="fas fa-sync-alt"></i> Gerar outra</button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" disabled>
+                  <i class="fas fa-arrow-left btn-icon"></i> Anterior
+                </button>
+                <button type="button" class="btn btn-primary btn-proximo" data-current="1" data-next="2">
+
+                  Próximo <i class="fas fa-arrow-right btn-icon"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Seção 2: Experiência Profissional -->
+            <div class="form-section" id="section2">
+              <h2 class="section-title">Experiência Profissional</h2>
+              
+              <div id="experiencias-container">
+                <div class="experiencia-item">
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="cargo1">Cargo</label>
+                        <input type="text" id="cargo1" placeholder="Ex: Desenvolvedor Front-end">
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="empresa1">Empresa</label>
+                        <input type="text" id="empresa1" placeholder="Ex: Google">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="inicio1">Data de início</label>
+                        <input type="month" id="inicio1">
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="fim1">Data de término</label>
+                        <input type="month" id="fim1">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="descricao1">Descrição das atividades</label>
+                    <textarea id="descricao1" placeholder="Descreva suas responsabilidades e conquistas neste cargo"></textarea>
+                  </div>
+                </div>
+              </div>
+              
+              <button type="button" class="btn btn-outline" onclick="adicionarExperiencia()">
+                <i class="fas fa-plus btn-icon"></i> Adicionar outra experiência
+              </button>
+              
+              <h2 class="section-title" style="margin-top: 2rem;">Formação Acadêmica</h2>
+              
+              <div id="formacoes-container">
+                <div class="formacao-item">
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="curso1">Curso</label>
+                        <input type="text" id="curso1" placeholder="Ex: Análise e Desenvolvimento de Sistemas">
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="instituicao1">Instituição</label>
+                        <input type="text" id="instituicao1" placeholder="Ex: Universidade de São Paulo">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="inicio-curso1">Ano de início</label>
+                        <input type="number" id="inicio-curso1" min="1900" max="2099" step="1" placeholder="Ex: 2018">
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="form-group">
+                        <label for="fim-curso1">Ano de conclusão</label>
+                        <input type="number" id="fim-curso1" min="1900" max="2099" step="1" placeholder="Ex: 2021">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <button type="button" class="btn btn-outline" onclick="adicionarFormacao()">
+                <i class="fas fa-plus btn-icon"></i> Adicionar outra formação
+              </button>
+              
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="proximaSecao(2, 1)">
+                  <i class="fas fa-arrow-left btn-icon"></i> Anterior
+                </button>
+                <button type="button" class="btn btn-primary" onclick="proximaSecao(2, 3)">
+                  Próximo <i class="fas fa-arrow-right btn-icon"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Seção 3: Habilidades -->
+            <div class="form-section" id="section3">
+              <h2 class="section-title">Habilidades Técnicas</h2>
+              
+              <div class="form-group">
+                <label for="habilidades">Lista de habilidades (separadas por vírgula)</label>
+                <textarea id="habilidades" placeholder="Ex: HTML, CSS, JavaScript, React, Git"></textarea>
+              </div>
+              
+              <div class="form-group">
+                <label>Nível de proficiência</label>
+                <div style="margin-top: 1rem;">
+                  <canvas id="skillsChart" height="150"></canvas>
+                </div>
+              </div>
+              
+              <h2 class="section-title" style="margin-top: 2rem;">Idiomas</h2>
+              
+              <div id="idiomas-container">
+                <div class="row">
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="idioma1">Idioma</label>
+                      <input type="text" id="idioma1" placeholder="Ex: Inglês">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="nivel1">Nível</label>
+                      <select id="nivel1">
+                        <option value="Básico">Básico</option>
+                        <option value="Intermediário">Intermediário</option>
+                        <option value="Avançado">Avançado</option>
+                        <option value="Fluente">Fluente</option>
+                        <option value="Nativo">Nativo</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <button type="button" class="btn btn-outline" onclick="adicionarIdioma()">
+                <i class="fas fa-plus btn-icon"></i> Adicionar outro idioma
+              </button>
+              
+              <h2 class="section-title" style="margin-top: 2rem;">Cursos e Certificações</h2>
+              
+              <div class="form-group">
+                <label for="cursos">Lista de cursos e certificações</label>
+                <textarea id="cursos" placeholder="Ex: Curso de UX Design - Alura (2022), Certificação AWS - Amazon (2023)"></textarea>
+              </div>
+              
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="proximaSecao(3, 2)">
+                  <i class="fas fa-arrow-left btn-icon"></i> Anterior
+                </button>
+                <button type="button" class="btn btn-primary" onclick="proximaSecao(3, 4)">
+                  Próximo <i class="fas fa-arrow-right btn-icon"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Seção 4: Finalizar -->
+            <div class="form-section" id="section4">
+              <h2 class="section-title">Escolha o Modelo do Seu Currículo</h2>
+              
+              <div class="template-selector">
+                <div class="templates-grid">
+                  <div class="template-card template-modern" onclick="selecionarTemplate('modern')">
+                    <div class="template-preview">
+                      <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <div class="template-name">Moderno</div>
+                  </div>
+                  <div class="template-card template-classic" onclick="selecionarTemplate('classic')">
+                    <div class="template-preview">
+                      <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="template-name">Clássico</div>
+                  </div>
+                  <div class="template-card template-creative" onclick="selecionarTemplate('creative')">
+                    <div class="template-preview">
+                      <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="template-name">Criativo</div>
+                  </div>
+                  <div class="template-card template-professional" onclick="selecionarTemplate('professional')">
+                    <div class="template-preview">
+                      <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="template-name">Profissional</div>
+                  </div>
+                  <div class="template-card template-minimalist" onclick="selecionarTemplate('minimalist')">
+                    <div class="template-preview">
+                      <i class="fas fa-minus"></i>
+                    </div>
+                    <div class="template-name">Minimalista</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="premium-features">
+                <h3 class="premium-title">
+                  <i class="fas fa-crown"></i>
+                  <span>Recursos Premium</span>
+                </h3>
+                <div class="features-grid">
+                  <div class="feature-card">
+                    <div class="feature-icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="feature-title">Download sem marca d'água</div>
+                    <div class="feature-desc">Baixe seu currículo em PDF sem a marca d'água do Currículo.AI</div>
+                  </div>
+                  <div class="feature-card">
+                    <div class="feature-icon">
+                      <i class="fas fa-palette"></i>
+                    </div>
+                    <div class="feature-title">Mais modelos</div>
+                    <div class="feature-desc">Acesso a 15 modelos profissionais exclusivos</div>
+                  </div>
+                  <div class="feature-card">
+                    <div class="feature-icon">
+                      <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="feature-title">Otimização por IA</div>
+                    <div class="feature-desc">Nossa IA analisa e sugere melhorias no seu currículo</div>
+                  </div>
+                  <div class="feature-card">
+                    <div class="feature-icon">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="feature-title">Armazenamento na nuvem</div>
+                    <div class="feature-desc">Salve até 10 currículos diferentes na nuvem</div>
+                  </div>
+                </div>
+                <a href="#" class="upgrade-btn" id="upgradeBtn">
+                  <i class="fas fa-crown"></i> Assinar Premium por R$19,90/mês
+                </a>
+              </div>
+              
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="proximaSecao(4, 3)">
+                  <i class="fas fa-arrow-left btn-icon"></i> Anterior
+                </button>
+                <button type="button" class="btn btn-primary" onclick="gerarCurriculo()">
+                  <i class="fas fa-file-pdf btn-icon"></i> Gerar Currículo
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+        
+        <div class="preview-container" id="previewContainer">
+          <div class="preview-header">
+            <h2 class="preview-title">Prévia do seu currículo</h2>
+            <div class="preview-actions">
+              <button class="btn btn-secondary" onclick="editarCurriculo()">
+                <i class="fas fa-edit btn-icon"></i> Editar
+              </button>
+              <button class="btn btn-primary" onclick="baixarPDF()">
+                <i class="fas fa-download btn-icon"></i> Baixar PDF
+              </button>
+            </div>
+          </div>
+          
+          <div id="curriculo" class="curriculo">
+            <div class="watermark">Currículo.AI</div>
+            <!-- O conteúdo do currículo será gerado aqui -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- My Resumes Section -->
+      <div class="container" id="myResumesSection" style="display: none;">
+        <header>
+          <h1>Meus Currículos</h1>
+          <p>Gerencie e edite todos os seus currículos salvos</p>
+        </header>
+        
+        <div class="resumes-list">
+          <div id="resumesListContainer">
+            <p style="text-align: center; color: #666; margin: 2rem 0;">Você ainda não criou nenhum currículo. Comece agora!</p>
+          </div>
+        </div>
+        
+        <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="showSection('create-resume')">
+          <i class="fas fa-plus"></i> Criar Novo Currículo
+        </button>
+      </div>
+      
+      <!-- ATS Analysis Section -->
+      <div class="container" id="atsAnalysisSection" style="display: none;">
+        <header>
+          <h1>Análise ATS</h1>
+          <p>Otimize seu currículo para sistemas de rastreamento de candidatos</p>
+        </header>
+        
+        <div class="ats-score">
+          <div class="score-circle">
+            <div class="score-inner">
+              <div class="score-value">75</div>
+              <div class="score-label">Pontuação ATS</div>
+            </div>
+          </div>
+          <h3 style="color: var(--primary-color);">Bom, mas pode melhorar</h3>
+          <p style="color: #666; max-width: 600px; margin: 0 auto;">Seu currículo está acima da média, mas com algumas melhorias pode chegar a 90+ e aumentar significativamente suas chances de ser selecionado.</p>
+        </div>
+        
+        <div class="ats-feedback">
+          <div class="feedback-item">
+            <div class="feedback-category">
+              <span class="feedback-icon good"><i class="fas fa-check-circle"></i></span>
+              <span>Palavras-chave</span>
+            </div>
+            <div class="feedback-text">
+              Seu currículo contém 85% das palavras-chave relevantes para a posição de Desenvolvedor Front-end.
+            </div>
+            <div class="feedback-suggestion">
+              <strong>Sugestão:</strong> Adicione termos como "TypeScript", "Web Components" e "Jest" para melhorar ainda mais.
+            </div>
+          </div>
+          
+          <div class="feedback-item">
+            <div class="feedback-category">
+              <span class="feedback-icon medium"><i class="fas fa-exclamation-circle"></i></span>
+              <span>Formatação</span>
+            </div>
+            <div class="feedback-text">
+              Alguns elementos de formatação podem não ser interpretados corretamente pelos sistemas ATS.
+            </div>
+            <div class="feedback-suggestion">
+              <strong>Sugestão:</strong> Evite tabelas, cabeçalhos/rodapés e colunas. Use formatação simples com títulos em negrito.
+            </div>
+          </div>
+          
+          <div class="feedback-item">
+            <div class="feedback-category">
+              <span class="feedback-icon bad"><i class="fas fa-times-circle"></i></span>
+              <span>Resultados Mensuráveis</span>
+            </div>
+            <div class="feedback-text">
+              Apenas 30% das suas experiências profissionais incluem resultados quantificáveis.
+            </div>
+            <div class="feedback-suggestion">
+              <strong>Sugestão:</strong> Adicione métricas como "Aumentei a performance em 40%" ou "Reduzi o tempo de carga em 2s".
+            </div>
+          </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+          <button class="btn btn-primary">
+            <i class="fas fa-magic"></i> Otimizar Automaticamente com IA
+          </button>
+          <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+            <i class="fas fa-lock"></i> Recurso disponível para assinantes Premium
+          </p>
+        </div>
+      </div>
+      
+      <!-- Interview Prep Section -->
+      <div class="container" id="interviewPrepSection" style="display: none;">
+        <header>
+          <h1>Preparação para Entrevista</h1>
+          <p>Pratique com perguntas comuns e receba feedback da nossa IA</p>
+        </header>
+        
+        <div class="interview-categories">
+          <div class="category-card" onclick="loadInterviewQuestions('technical')">
+            <div class="category-icon">
+              <i class="fas fa-code"></i>
+            </div>
+            <div class="category-title">Técnicas</div>
+            <div class="category-desc">Perguntas sobre habilidades específicas e conhecimentos técnicos</div>
+          </div>
+          
+          <div class="category-card" onclick="loadInterviewQuestions('behavioral')">
+            <div class="category-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="category-title">Comportamentais</div>
+            <div class="category-desc">Situações que testam seu comportamento e habilidades sociais</div>
+          </div>
+          
+          <div class="category-card" onclick="loadInterviewQuestions('situational')">
+            <div class="category-icon">
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <div class="category-title">Situacionais</div>
+            <div class="category-desc">Como você reagiria em determinadas situações no trabalho</div>
+          </div>
+          
+          <div class="category-card" onclick="loadInterviewQuestions('company')">
+            <div class="category-icon">
+              <i class="fas fa-building"></i>
+            </div>
+            <div class="category-title">Sobre a Empresa</div>
+            <div class="category-desc">Testam seu conhecimento e interesse pela empresa</div>
+          </div>
+        </div>
+        
+        <div id="interviewQuestionsContainer" style="display: none;">
+          <h2 style="color: var(--primary-color); margin-top: 2rem;">Perguntas Técnicas</h2>
+          
+          <div class="question-card">
+            <div class="question-text">
+              "Você pode explicar a diferença entre let, const e var no JavaScript?"
+            </div>
+            <div class="answer-area">
+              <textarea placeholder="Digite sua resposta aqui..." style="width: 100%; min-height: 100px;"></textarea>
+              <button class="btn btn-outline" style="margin-top: 0.5rem;">
+                <i class="fas fa-robot"></i> Analisar Resposta
+              </button>
+            </div>
+            <div class="answer-tips">
+              <div class="tips-title">
+                <i class="fas fa-lightbulb"></i>
+                <span>Dicas para responder</span>
+              </div>
+              <ul class="tips-list">
+                <li>Explique o escopo de cada declaração</li>
+                <li>Mencione hoisting e temporal dead zone</li>
+                <li>Dê exemplos de quando usar cada um</li>
+                <li>Relacione com boas práticas modernas</li>
+              </ul>
+            </div>
+        </div>
+                  <div class="question-card">
+            <div class="question-text">
+              "Como você lida com conflitos de merge no Git?"
+            </div>
+            <div class="answer-area">
+              <textarea placeholder="Digite sua resposta aqui..." style="width: 100%; min-height: 100px;"></textarea>
+              <button class="btn btn-outline" style="margin-top: 0.5rem;">
+                <i class="fas fa-robot"></i> Analisar Resposta
+              </button>
+            </div>
+            <div class="answer-tips">
+              <div class="tips-title">
+                <i class="fas fa-lightbulb"></i>
+                <span>Dicas para responder</span>
+              </div>
+              <ul class="tips-list">
+                <li>Explique seu processo de resolução de conflitos</li>
+                <li>Mencione ferramentas que você usa (VSCode, GitKraken, etc)</li>
+                <li>Destaque a importância da comunicação com a equipe</li>
+                <li>Mencione estratégias para prevenir conflitos</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin: 2rem 0;">
+            <button class="btn btn-primary">
+              <i class="fas fa-random"></i> Carregar Mais Perguntas
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Job Search Section -->
+      <div class="container" id="jobSearchSection" style="display: none;">
+        <header>
+          <h1>Busca de Vagas</h1>
+          <p>Encontre as melhores oportunidades para o seu perfil</p>
+        </header>
+        
+        <div class="form-container">
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label for="jobTitle">Cargo/Palavra-chave</label>
+                <input type="text" id="jobTitle" placeholder="Ex: Desenvolvedor Front-end">
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group">
+                <label for="jobLocation">Localização</label>
+                <input type="text" id="jobLocation" placeholder="Ex: São Paulo ou Remoto">
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button class="btn btn-primary" style="width: 100%;">
+              <i class="fas fa-search"></i> Buscar Vagas
+            </button>
+          </div>
+        </div>
+        
+        <div id="jobResultsContainer">
+          <p style="text-align: center; color: #666; margin: 2rem 0;">
+            <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i><br>
+            Digite os critérios de busca para encontrar vagas relevantes
+          </p>
+        </div>
+      </div>
+      
+      <!-- Career Advice Section -->
+      <div class="container" id="careerAdviceSection" style="display: none;">
+        <header>
+          <h1>Conselhos de Carreira</h1>
+          <p>Artigos e dicas para impulsionar sua carreira</p>
+        </header>
+        
+        <div class="dashboard-cards">
+          <div class="dashboard-card" onclick="loadArticle('improve-resume')">
+            <div class="card-header">
+              <div class="card-icon blue">
+                <i class="fas fa-file-alt"></i>
+              </div>
+              <div>
+                <div class="card-title">Como Melhorar Seu Currículo</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              10 dicas essenciais para destacar seu currículo
+            </div>
+          </div>
+          
+          <div class="dashboard-card" onclick="loadArticle('interview-tips')">
+            <div class="card-header">
+              <div class="card-icon green">
+                <i class="fas fa-comments"></i>
+              </div>
+              <div>
+                <div class="card-title">Dicas para Entrevistas</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              Como se preparar para diferentes tipos de entrevista
+            </div>
+          </div>
+          
+          <div class="dashboard-card" onclick="loadArticle('salary-negotiation')">
+            <div class="card-header">
+              <div class="card-icon orange">
+                <i class="fas fa-handshake"></i>
+              </div>
+              <div>
+                <div class="card-title">Negociação Salarial</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              Estratégias para negociar seu salário com confiança
+            </div>
+          </div>
+          
+          <div class="dashboard-card" onclick="loadArticle('career-growth')">
+            <div class="card-header">
+              <div class="card-icon red">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div>
+                <div class="card-title">Planejamento de Carreira</div>
+              </div>
+            </div>
+            <div class="card-footer">
+              Como traçar um plano para alcançar seus objetivos
+            </div>
+          </div>
+        </div>
+        
+        <div id="articleContainer" style="display: none; margin-top: 2rem;">
+          <!-- O conteúdo dos artigos será carregado aqui -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Floating CTA -->
   <div class="floating-cta" id="floatingCta" onclick="scrollToUpgrade()">
     <div class="cta-icon">
       <i class="fas fa-crown"></i>
     </div>
-    <div class="cta-text">
-      Upgrade Premium
-    </div>
-    <div class="cta-price">
-      R$19,90/mês
-    </div>
+    <div class="cta-text">Ativar Premium</div>
+    <div class="cta-price">R$19,90/mês</div>
   </div>
-  
-  <script>
-    // Variáveis globais
-    let templateSelecionado = 'modern';
-    let contadorExperiencias = 1;
-    let contadorFormacoes = 1;
-    let contadorIdiomas = 1;
-    
-    // Atualizar progresso
-    function atualizarProgresso(secaoAtual) {
-      const porcentagem = (secaoAtual / 4) * 100;
-      document.getElementById('progressBar').style.width = `${porcentagem}%`;
-      document.getElementById('progressText').textContent = `${porcentagem}% completo`;
-      
-      // Atualizar steps
-      for (let i = 1; i <= 4; i++) {
-        const step = document.getElementById(`step${i}`);
-        if (i <= secaoAtual) {
-          step.classList.add('active');
-        } else {
-          step.classList.remove('active');
-        }
-      }
-    }
-    
-    // Navegação entre seções
-    function proximaSecao(atual, proxima) {
-      document.getElementById(`section${atual}`).classList.remove('active');
-      document.getElementById(`section${proxima}`).classList.add('active');
-      atualizarProgresso(proxima);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    
-    // Adicionar campos de experiência
-    function adicionarExperiencia() {
-      contadorExperiencias++;
-      const container = document.getElementById('experiencias-container');
-      
-      const novaExperiencia = document.createElement('div');
-      novaExperiencia.className = 'experiencia-item';
-      novaExperiencia.style.marginTop = '1.5rem';
-      novaExperiencia.style.paddingTop = '1.5rem';
-      novaExperiencia.style.borderTop = '1px dashed #ddd';
-      novaExperiencia.innerHTML = `
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label for="cargo${contadorExperiencias}">Cargo</label>
-              <input type="text" id="cargo${contadorExperiencias}" placeholder="Ex: Desenvolvedor Front-end">
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label for="empresa${contadorExperiencias}">Empresa</label>
-              <input type="text" id="empresa${contadorExperiencias}" placeholder="Ex: Google">
-            </div>
-          </div>
-        </div>
-        
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label for="inicio${contadorExperiencias}">Data de início</label>
-              <input type="month" id="inicio${contadorExperiencias}">
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label for="fim${contadorExperiencias}">Data de término</label>
-              <input type="month" id="fim${contadorExperiencias}">
-            </div>
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label for="descricao${contadorExperiencias}">Descrição das atividades</label>
-          <textarea id="descricao${contadorExperiencias}" placeholder="Descreva suas responsabilidades e conquistas neste cargo"></textarea>
-        </div>
-        
-        <button type="button" class="btn btn-outline" style="background-color: #f8f9fa; color: var(--danger-color); border-color: var(--danger-color);" onclick="removerExperiencia(this)">
-          <i class="fas fa-trash btn-icon"></i> Remover experiência
-        </button>
-      `;
-      
-      container.appendChild(novaExperiencia);
-    }
-    
-    // Remover experiência
-    function removerExperiencia(botao) {
-      const experienciaItem = botao.parentElement;
-      experienciaItem.remove();
-    }
-    
-    // Adicionar campos de formação
-    function adicionarFormacao() {
-      contadorFormacoes++;
-      const container = document.getElementById('formacoes-container');
-      
-      const novaFormacao = document.createElement('div');
-      novaFormacao.className = 'formacao-item';
-      novaFormacao.style.marginTop = '1.5rem';
-      novaFormacao.style.paddingTop = '1.5rem';
-      novaFormacao.style.borderTop = '1px dashed #ddd';
-      novaFormacao.innerHTML = `
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label for="curso${contadorFormacoes}">Curso</label>
-              <input type="text" id="curso${contadorFormacoes}" placeholder="Ex: Análise e Desenvolvimento de Sistemas">
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label for="instituicao${contadorFormacoes}">Instituição</label>
-              <input type="text" id="instituicao${contadorFormacoes}" placeholder="Ex: Universidade de São Paulo">
-            </div>
-          </div>
-        </div>
-        
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label for="inicio-curso${contadorFormacoes}">Ano de início</label>
-              <input type="number" id="inicio-curso${contadorFormacoes}" min="1900" max="2099" step="1" placeholder="Ex: 2018">
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label for="fim-curso${contadorFormacoes}">Ano de conclusão</label>
-              <input type="number" id="fim-curso${contadorFormacoes}" min="1900" max="2099" step="1" placeholder="Ex: 2021">
-            </div>
-          </div>
-        </div>
-        
-        <button type="button" class="btn btn-outline" style="background-color: #f8f9fa; color: var(--danger-color); border-color: var(--danger-color);" onclick="removerFormacao(this)">
-          <i class="fas fa-trash btn-icon"></i> Remover formação
-        </button>
-      `;
-      
-      container.appendChild(novaFormacao);
-    }
-    
-    // Remover formação
-    function removerFormacao(botao) {
-      const formacaoItem = botao.parentElement;
-      formacaoItem.remove();
-    }
-    
-    // Adicionar campos de idioma
-    function adicionarIdioma() {
-      contadorIdiomas++;
-      const container = document.getElementById('idiomas-container');
-      
-      const novoIdioma = document.createElement('div');
-      novoIdioma.className = 'idioma-item';
-      novoIdioma.style.marginTop = '1rem';
-      novoIdioma.style.paddingTop = '1rem';
-      novoIdioma.style.borderTop = '1px dashed #ddd';
-      novoIdioma.innerHTML = `
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label for="idioma${contadorIdiomas}">Idioma</label>
-              <input type="text" id="idioma${contadorIdiomas}" placeholder="Ex: Inglês">
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label for="nivel${contadorIdiomas}">Nível</label>
-              <select id="nivel${contadorIdiomas}">
-                <option value="Básico">Básico</option>
-                <option value="Intermediário">Intermediário</option>
-                <option value="Avançado">Avançado</option>
-                <option value="Fluente">Fluente</option>
-                <option value="Nativo">Nativo</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        
-        <button type="button" class="btn btn-outline" style="background-color: #f8f9fa; color: var(--danger-color); border-color: var(--danger-color);" onclick="removerIdioma(this)">
-          <i class="fas fa-trash btn-icon"></i> Remover idioma
-        </button>
-      `;
-      
-      container.appendChild(novoIdioma);
-    }
-    
-    // Remover idioma
-    function removerIdioma(botao) {
-      const idiomaItem = botao.parentElement;
-      idiomaItem.remove();
-    }
-    
-    // Selecionar template
-    function selecionarTemplate(template) {
-      templateSelecionado = template;
-      
-      // Remover seleção de todos os templates
-      document.querySelectorAll('.template-card').forEach(card => {
-        card.classList.remove('selected');
-      });
-      
-      // Adicionar seleção ao template clicado
-      event.currentTarget.classList.add('selected');
-    }
-    
-    // Usar sugestão da IA
-    function usarSugestao(campo) {
-      const sugestao = document.getElementById(`sugestao-${campo}`).textContent;
-      document.getElementById(campo).value = sugestao;
-    }
-    
-    // Gerar nova sugestão da IA (simulação)
-    function gerarSugestao(campo) {
-      const sugestoes = {
-        'sobre': [
-          'Desenvolvedor front-end com 5 anos de experiência em criação de interfaces responsivas e acessíveis. Apaixonado por UX/UI e sempre buscando aprender novas tecnologias para criar experiências digitais excepcionais.',
-          'Profissional de marketing digital com expertise em gestão de redes sociais e campanhas de performance. Resultados comprovados no aumento de engajamento e conversões para marcas de diversos segmentos.',
-          'Engenheiro de software com sólida experiência em arquitetura de sistemas escaláveis. Especializado em microsserviços e cloud computing, com certificações AWS e Google Cloud.'
-        ]
-      };
-      
-      const randomIndex = Math.floor(Math.random() * sugestoes[campo].length);
-      document.getElementById(`sugestao-${campo}`).textContent = sugestoes[campo][randomIndex];
-    }
-    
-    // Gerar gráfico de habilidades
-    function gerarGraficoHabilidades() {
-      const ctx = document.getElementById('skillsChart').getContext('2d');
-      
-      // Simulação de dados - na prática, você pode coletar esses dados do usuário
-      const habilidades = ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js'];
-      const niveis = [90, 85, 80, 75, 70];
-      
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: habilidades,
-          datasets: [{
-            label: 'Nível de Proficiência',
-            data: niveis,
-            backgroundColor: [
-              'rgba(67, 97, 238, 0.7)',
-              'rgba(72, 149, 239, 0.7)',
-              'rgba(0, 119, 182, 0.7)',
-              'rgba(3, 4, 94, 0.7)',
-              'rgba(2, 62, 138, 0.7)'
-            ],
-            borderColor: [
-              'rgba(67, 97, 238, 1)',
-              'rgba(72, 149, 239, 1)',
-              'rgba(0, 119, 182, 1)',
-              'rgba(3, 4, 94, 1)',
-              'rgba(2, 62, 138, 1)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 100
-            }
-          },
-          responsive: true,
-          plugins: {
-            legend: {
-              display: false
-            }
-          }
-        }
-      });
-    }
-    
-    // Gerar currículo
-    function gerarCurriculo() {
-      // Coletar dados do formulário
-      const nome = document.getElementById('nome').value;
-      const profissao = document.getElementById('profissao').value;
-      const email = document.getElementById('email').value;
-      const telefone = document.getElementById('telefone').value;
-      const cidade = document.getElementById('cidade').value;
-      const linkedin = document.getElementById('linkedin').value;
-      const sobre = document.getElementById('sobre').value;
-      
-      // Coletar habilidades
-      const habilidades = document.getElementById('habilidades').value.split(',').map(h => h.trim());
-      
-      // Coletar experiências
-      const experiencias = [];
-      for (let i = 1; i <= contadorExperiencias; i++) {
-        const cargo = document.getElementById(`cargo${i}`);
-        const empresa = document.getElementById(`empresa${i}`);
-        const inicio = document.getElementById(`inicio${i}`);
-        const fim = document.getElementById(`fim${i}`);
-        const descricao = document.getElementById(`descricao${i}`);
-        
-        if (cargo && cargo.value) {
-          experiencias.push({
-            cargo: cargo.value,
-            empresa: empresa ? empresa.value : '',
-            inicio: inicio ? inicio.value : '',
-            fim: fim ? fim.value : '',
-            descricao: descricao ? descricao.value : ''
-          });
-        }
-      }
-      
-      // Coletar formações
-      const formacoes = [];
-      for (let i = 1; i <= contadorFormacoes; i++) {
-        const curso = document.getElementById(`curso${i}`);
-        const instituicao = document.getElementById(`instituicao${i}`);
-        const inicio = document.getElementById(`inicio-curso${i}`);
-        const fim = document.getElementById(`fim-curso${i}`);
-        
-        if (curso && curso.value) {
-          formacoes.push({
-            curso: curso.value,
-            instituicao: instituicao ? instituicao.value : '',
-            inicio: inicio ? inicio.value : '',
-            fim: fim ? fim.value : ''
-          });
-        }
-      }
-      
-      // Coletar idiomas
-      const idiomas = [];
-      for (let i = 1; i <= contadorIdiomas; i++) {
-        const idioma = document.getElementById(`idioma${i}`);
-        const nivel = document.getElementById(`nivel${i}`);
-        
-        if (idioma && idioma.value) {
-          idiomas.push({
-            idioma: idioma.value,
-            nivel: nivel ? nivel.value : ''
-          });
-        }
-      }
-      
-      // Coletar cursos
-      const cursos = document.getElementById('cursos').value;
-      
-      // Gerar HTML do currículo
-      const curriculoHTML = `
-        <div class="curriculo-header">
-          <h1 class="curriculo-name">${nome}</h1>
-          <h2 class="curriculo-title">${profissao}</h2>
-          
-          <div class="curriculo-contact">
-            ${email ? `<div class="contact-item"><i class="fas fa-envelope contact-icon"></i> ${email}</div>` : ''}
-            ${telefone ? `<div class="contact-item"><i class="fas fa-phone contact-icon"></i> ${telefone}</div>` : ''}
-            ${cidade ? `<div class="contact-item"><i class="fas fa-map-marker-alt contact-icon"></i> ${cidade}</div>` : ''}
-            ${linkedin ? `<div class="contact-item"><i class="fab fa-linkedin contact-icon"></i> ${linkedin}</div>` : ''}
-          </div>
-        </div>
-        
-        ${sobre ? `
-        <div class="curriculo-section">
-          <h3 class="section-title-curriculo">Sobre</h3>
-          <div class="section-content">
-            <p>${sobre}</p>
-          </div>
-        </div>
-        ` : ''}
-        
-        ${experiencias.length > 0 ? `
-        <div class="curriculo-section">
-          <h3 class="section-title-curriculo">Experiência Profissional</h3>
-          <div class="section-content">
-            ${experiencias.map(exp => `
-              <div class="experience-item">
-                <div class="experience-header">
-                  <div class="experience-title">${exp.cargo}</div>
-                  <div class="experience-date">${exp.inicio} - ${exp.fim || 'Atual'}</div>
-                </div>
-                <div class="experience-company">${exp.empresa}</div>
-                <div class="experience-description">${exp.descricao.replace(/\n/g, '<br>')}</div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-        ` : ''}
-        
-        ${formacoes.length > 0 ? `
-        <div class="curriculo-section">
-          <h3 class="section-title-curriculo">Formação Acadêmica</h3>
-          <div class="section-content">
-            ${formacoes.map(form => `
-              <div class="education-item">
-                <div class="education-header">
-                  <div class="education-title">${form.curso}</div>
-                  <div class="education-date">${form.inicio} - ${form.fim || 'Atual'}</div>
-                </div>
-                <div class="education-institution">${form.instituicao}</div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-        ` : ''}
-        
-        ${habilidades.length > 0 ? `
-        <div class="curriculo-section">
-          <h3 class="section-title-curriculo">Habilidades Técnicas</h3>
-          <div class="section-content">
-            <div class="skills-container">
-              ${habilidades.map(habilidade => `
-                <div class="skill-tag">${habilidade}</div>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-        ` : ''}
-        
-        ${idiomas.length > 0 ? `
-        <div class="curriculo-section">
-          <h3 class="section-title-curriculo">Idiomas</h3>
-          <div class="section-content">
-            <ul>
-              ${idiomas.map(idioma => `
-                <li><strong>${idioma.idioma}:</strong> ${idioma.nivel}</li>
-              `).join('')}
-            </ul>
-          </div>
-        </div>
-        ` : ''}
-        
-        ${cursos ? `
-        <div class="curriculo-section">
-          <h3 class="section-title-curriculo">Cursos e Certificações</h3>
-          <div class="section-content">
-            <p>${cursos.replace(/\n/g, '<br>')}</p>
-          </div>
-        </div>
-        ` : ''}
-      `;
-      
-      // Aplicar template selecionado
-      document.getElementById('curriculo').className = `curriculo template-${templateSelecionado}`;
-      document.getElementById('curriculo').innerHTML = `<div class="watermark">Currículo.AI</div>${curriculoHTML}`;
-      
-      // Mostrar prévia
-      document.getElementById('previewContainer').style.display = 'block';
-      window.scrollTo({ top: document.getElementById('previewContainer').offsetTop, behavior: 'smooth' });
-    }
-    
-    // Editar currículo
-    function editarCurriculo() {
-      document.getElementById('previewContainer').style.display = 'none';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    
-    // Baixar PDF
-    function baixarPDF() {
-      const element = document.getElementById('curriculo');
-      const opt = {
-        margin: 10,
-        filename: 'curriculo.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-      
-      // Mostrar popup de upgrade se não for premium
-      if (!document.getElementById('upgradeBtn').classList.contains('premium-active')) {
-        if (confirm('Para baixar sem marca d\'água, assine nossa versão Premium por apenas R$19,90/mês. Deseja assinar agora?')) {
-          scrollToUpgrade();
-          return;
-        }
-      }
-      
-      html2pdf().set(opt).from(element).save();
-    }
-    
-    // Scroll para seção de upgrade
-    function scrollToUpgrade() {
-      document.getElementById('section4').classList.add('active');
-      document.getElementById('section1').classList.remove('active');
-      document.getElementById('section2').classList.remove('active');
-      document.getElementById('section3').classList.remove('active');
-      atualizarProgresso(4);
-      
-      const element = document.getElementById('upgradeBtn');
-      element.scrollIntoView({ behavior: 'smooth' });
-      
-      // Efeito visual para chamar atenção
-      element.style.transform = 'scale(1.05)';
-      element.style.boxShadow = '0 0 15px rgba(255, 215, 0, 0.7)';
-      setTimeout(() => {
-        element.style.transform = '';
-        element.style.boxShadow = '';
-      }, 1000);
-    }
-    
-    // Inicialização
-    document.addEventListener('DOMContentLoaded', function() {
-      atualizarProgresso(1);
-      gerarGraficoHabilidades();
-      
-      // Simular assinatura premium (para demonstração)
-      document.getElementById('upgradeBtn').addEventListener('click', function(e) {
-        e.preventDefault();
-        this.textContent = 'Assinatura ativada!';
-        this.classList.add('premium-active');
-        this.style.background = 'linear-gradient(135deg, #4bb543, #2e8b57)';
-        document.getElementById('floatingCta').style.display = 'none';
-        alert('Parabéns! Você agora é um usuário Premium do Currículo.AI Turbo 2.0');
-      });
-    });
-  </script>
+
+  <script src="script.js"></script>
+  <script src="formulario-curriculo.js"></script>
 </body>
 </html>
