@@ -34,6 +34,11 @@ function showSection(sectionId) {
     activeLink.classList.add('active');
   }
   
+  // Fecha o menu em dispositivos móveis
+  if (window.innerWidth <= 768) {
+    document.querySelector('.sidebar').classList.remove('active');
+  }
+  
   // Rola para o topo
   window.scrollTo(0, 0);
 }
@@ -1065,4 +1070,7 @@ document.addEventListener('DOMContentLoaded', function() {
     carregarCurriculosSalvos();
   }
 });
- 
+ function toggleMenu() {
+  const sidebar = document.querySelector('.sidebar');
+  sidebar.classList.toggle('active');
+}
